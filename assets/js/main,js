@@ -1,0 +1,65 @@
+/**
+ * main.js - Script Principal para Restaurante Gamificado
+ * Autor: Equipo Restaurante Gamificado
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("🍽️ Restaurante Gamificado - Sistema Iniciado Correctamente");
+
+    // ===== 1. AUTO-OCULTAR ALERTAS DESPUÉS DE 5 SEGUNDOS =====
+    const alertas = document.querySelectorAll('.alerta');
+    if (alertas.length > 0) {
+        setTimeout(() => {
+            alertas.forEach(alerta => {
+                alerta.style.transition = 'opacity 0.5s ease';
+                alerta.style.opacity = '0';
+                setTimeout(() => alerta.remove(), 500);
+            });
+        }, 5000);
+    }
+
+    // ===== 2. CONFIRMACIÓN GLOBAL PARA ACCIONES DE ELIMINACIÓN =====
+    const botonesEliminar = document.querySelectorAll('form[onsubmit*="confirm"]');
+    botonesEliminar.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            const seguro = confirm("¿Estás seguro de realizar esta acción irreversible?");
+            if (!seguro) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // ===== 3. RESALTAR ENLACE ACTIVO EN EL SIDEBAR =====
+    const rutaActual = window.location.pathname;
+    const enlacesSidebar = document.querySelectorAll('.sidebar nav a');
+    
+    enlacesSidebar.forEach(enlace => {
+        if (enlace.getAttribute('href') && rutaActual.includes(enlace.getAttribute('href'))) {
+            enlace.classList.add('activo');
+        }
+    });
+
+    // ===== 4. VALIDACIÓN BÁSICA DE FORMULARIOS =====
+    const formularios = document.querySelectorAll('form');
+    formularios.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            const inputsRequeridos = form.querySelectorAll('input[required], select[required], textarea[required]');
+            let valido = true;
+
+            inputsRequeridos.forEach(input => {
+                if (!input.value.trim()) {
+                    valido = false;
+                    input.style.borderColor = 'var(--rojo)';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+
+            if (!valido) {
+                // Opcional: prevenir si falta algún campo crítico
+                // e.preventDefault();
+                // alert('Por favor completa todos los campos requeridos.');
+            }
+        });
+    });
+});
